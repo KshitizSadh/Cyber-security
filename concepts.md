@@ -79,7 +79,7 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
     | 13. Exfiltration       | Steal data                                                 |
     | 14. Impact             | Manipulate, interrupt, or destroy your systems and data    |
 
-    ![alt text](image-2.png)
+  
 
 - ### What Are Procedures?
     - Procedures are the specific implementations that adversaries use for techniques or subtechniques
@@ -108,7 +108,6 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
 
 - The matrix provides a visual representation of the relationship between tactics and techniques.
 
-- ![alt text](image.png)
 
 - The matrix is organized into columns and rows. The columns represent tactics, and the rows represent techniques.
 
@@ -131,7 +130,6 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
 6. **Tools :** Malware, C2 (command and control), Exploits or password cracking tools, challenging to change
 7. **TTPs :** Tactics, Techniques, and Procedures Tough to change
 
-![alt text](image-1.png)
 
 ## CIA Triad : Confidentiality, Integrity, Availability
 
@@ -162,7 +160,6 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
 
 ## Risk Assessment
 
-![alt text](RiskAssesment.png)
 
 - An `Asset` is which we are trying to protect.
 
@@ -172,7 +169,6 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
 
     **Note :** `Risk` is the intersection of `Asset`, `Threat`, and `Vulnerability`.
 
-![alt text](ControlRisk.png)
 
 ### Network Threat Categories
 
@@ -239,10 +235,7 @@ This is like a bank hiring someone to dress as a burglar and try to break into t
 - Subjective Assessment
 - Assign relative probability and impact to risk
 - can be `High, medium, low` or `1-10` <hr>
-![alt text](image-3.png)
-
-### Quantitative Risk Assessment 
-![alt text](image-4.png)
+ 
     
 ### APTs
 
@@ -280,6 +273,6 @@ Cyberespionage :  Cyberespionage is the act of using digital techniques and tech
 
 Botnets :  Botnets are networks of compromised computers or devices that are under the control of a malicious actor. These compromised devices, often referred to as "bots" or "zombies," are typically infected with malware that allows the attacker to remotely control them. Botnets are commonly used for various malicious activities, such as launching distributed denial-of-service (DDoS) attacks, spreading malware, sending spam emails, or conducting large-scale cyberattacks.
  
-#### FEILD IN CYBER SECURITY
+#### FEILDS IN CYBER SECURITY
 ![image](https://github.com/KshitizSadh/Cyber-security/assets/142923024/9512742e-49f9-4fe2-a6e1-07b337b91f69)  
 
