@@ -1,3 +1,4 @@
+# CIA 
 **Before we can describe something as secure, we need to consider better what makes up security. When you want to judge the security of a system, you need to think in terms of the security triad: confidentiality, integrity, and availability (CIA).**
 
 Confidentiality ensures that only the intended persons or recipients can access the data.
