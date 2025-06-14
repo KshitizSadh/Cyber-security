@@ -17,7 +17,7 @@
 - `Web browser`
 
 ---
-##RECON FINDINGS
+##RECON FINDINGS##
 
 *Nmap*
 
@@ -138,8 +138,16 @@ after refreshing
  ![VirtualBox_kali-linux-2024 3-virtualbox-amd64_14_06_2025_18_12_06](https://github.com/user-attachments/assets/b1215812-4205-4d57-8b90-abd6d115eb2d)
 
  ***What is the content of the hidden text file in the flags folder?***
- for this we'll look for a SSTI on the page where the input can give us RCE or directly get the result
- 
+ >for this we'll look for a SSTI on the page where the input can give us RCE or directly get the result
+> ![image](https://github.com/user-attachments/assets/22a5195f-4690-4fdc-a46b-607c7bf298c4)
+>![image](https://github.com/user-attachments/assets/4238b077-0755-4cc5-b98d-2c15713e6bd3)
+now i'll try to get a RCE on this uing netcat as we know already that this page uses ***twig*** for the code of template injeacaation. i did some searching and foound i can use sort pass thru function.
+>{{['id',""]|sort('passthru')}}
+>![image](https://github.com/user-attachments/assets/6ac83e92-baa3-467a-9129-c7c1bde798b6)
+and now after some chaining and iterations i got the flag
+>![VirtualBox_kali-linux-2024 3-virtualbox-amd64_14_06_2025_17_28_03](https://github.com/user-attachments/assets/12047a7d-e6e7-486f-aa91-4278052bd70c)
+
+
 
 
 
