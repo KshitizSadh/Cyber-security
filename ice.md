@@ -1,5 +1,6 @@
-# write up for the 'ice' on try hack me 
-> This room focuses on exploiting and testing penetration skills on machine based on various exploits,vulnerblities and skills.
+# 🎧 Ice (Icecast Vulnerability Exploit)
+> This project demonstrates exploitation techniques against an outdated, vulnerable Icecast server (CVE‑2004‑1561). Follow the steps below to initialize Metasploit, configure the exploit, and deploy a Meterpreter shell.
+----
 > ## Recon
 > firstly, i scanned through all the orts using nmap ` sudo nmap -sS -p- <ip-addess> `,and found various inteesting stuff
 > ![1](https://github.com/user-attachments/assets/6e0520b2-76e9-40f5-8221-1b53ffbbce5c)
@@ -35,7 +36,8 @@ Service Info: Host: DARK-PC; OS: Windows; CPE: cpe:/o:microsoft:windows
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 612.13 seconds
 ```
-by usiing -s
+by usiing -sV i foun all about the servies an versions.
+----
 ## Gain Access
 >During service enumeration, we identified Icecast running on the target machine — a known vulnerable media streaming server. Researching the vulnerability (CVE-2004-1561) on cvedetails.com revealed an Impact Score of 6.4, indicating significant potential damage. Using Metasploit, we searched for available exploits with search icecast and found the relevant module: exploit/windows/http/icecast_header. After selecting the module and configuring RHOSTS with the target IP and LHOST with our tun0 IP, we executed the exploit with the exploit command. This gave us a Meterpreter session, successfully compromising the machine and setting the stage for post-exploitation activities.
 ```Metasploit tip: Set the current module's RHOSTS with database values using 
@@ -115,6 +117,8 @@ msf6 exploit(windows/http/icecast_header) > exploit
 
 ```
 ![2](https://github.com/user-attachments/assets/e0cd2ea4-6ddd-43ba-aa39-d1b12da955db)
+
+---
 ## Escalate
 >We exploited the vulnerable Icecast service and gained a Meterpreter shell on the target machine. Initial recon showed the user as Dark, running Windows build 7601 with x64 architecture. Using local_exploit_suggester, we found exploit/windows/local/bypassuac_eventvwr as a privilege escalation path. After setting the correct SESSION and LHOST, we ran the exploit and received a new elevated session. Running getprivs confirmed elevated permissions, including SeTakeOwnershipPrivilege, allowing file ownership takeover — indicating successful privilege escalation.
 ```
@@ -129,6 +133,7 @@ Domain          : WORKGROUP
 Logged On Users : 2
 Meterpreter     : x86/windows
 ```
+---
 ## Looting
 >With elevated privileges, we aimed to interact with lsass, the Windows authentication service. We first listed processes using ps and identified the spoolsv.exe (Printer Spooler) process as a suitable migration target due to its matching architecture (x64) and permissions. Using migrate -N spoolsv.exe, we migrated successfully and confirmed SYSTEM-level access via getuid. Next, we loaded Kiwi (load kiwi)—an updated version of Mimikatz—and used the creds_all command to dump credentials. From this, we extracted the password for user Dark, leveraging the weak security posture of the target system
 ```
@@ -287,6 +292,7 @@ SeTakeOwnershipPrivilege
 SeTimeZonePrivilege
 SeUndockPrivilege
 ```
+----
 ## Post Exploitation
 >In our post-exploitation phase, we explored various powerful Meterpreter commands. We used hashdump to extract password hashes and screenshare to watch the remote desktop in real time. To capture audio, we used record_mic, and for timestamp manipulation (if explicitly allowed), timestomp. Leveraging Mimikatz, we prepared for persistence with golden_ticket_create, which abuses Kerberos authentication. Finally, with the credentials for user Dark, we enabled RDP using run post/windows/manage/enable_rdp to allow graphical access to the target system — gaining full insight into the user's environment.
 ```
@@ -641,5 +647,7 @@ IPv6 Netmask : ffff:ffff:ffff:ffff::
 
 meterpreter > 
 ```
+----
+
 ## conclusion 
 This room helped in practicing and harnessing recon and exploitation skill with nmap,metasploit,mimikatz and it was a easy challenge for me as a beginner. 
