@@ -12,7 +12,6 @@
 ## 🧠 Overview
 
 **Objective**:  
-A brief description of the room’s goals. For example:  
 "Compromise the target machine through enumeration, exploit vulnerabilities, and escalate privileges to root."
 
 ---
@@ -21,13 +20,9 @@ A brief description of the room’s goals. For example:
 
 - `nmap`
 - `gobuster`
-- `hydra`
-- `dirb`
-- `burpsuite`
 - `linpeas`
-- `netcat`
 - `john/hashcat`
-- Any others used...
+
 
 ---
 
@@ -36,7 +31,8 @@ A brief description of the room’s goals. For example:
 ### 🔍 Nmap Scan
 
 ```bash
-nmap -sC -sV -T4 -Pn <target-ip> -oN nmap.txt
+nmap -sC -sV  -T4  -Pn  10.201.18.241
+
 ````
 
 **Output Summary**:
@@ -50,62 +46,104 @@ nmap -sC -sV -T4 -Pn <target-ip> -oN nmap.txt
 ## 📁 Web Enumeration
 
 ### Gobuster/Dirb Scan
-
-```bash
-gobuster dir -u http://<target-ip> -w /usr/share/wordlists/dirb/common.txt -x php,txt,html -o gobuster.txt
 ```
 
-**Interesting Findings**:
-
-* `/admin`
-* `/login.php`
-* `/robots.txt`
-
+gobuster dir -u http://10.201.18.24 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.201.18.24
+[+] Method:                  GET
+[+] Threads:                 50
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/img                  (Status: 301) [Size: 0] [--> img/]
+/downloads            (Status: 301) [Size: 0] [--> downloads/]
+/aboutus              (Status: 301) [Size: 0] [--> aboutus/]
+/admin                (Status: 301) [Size: 42] [--> /admin/]
+/css
+```
 ---
 
 ## 🔓 Exploitation
 
 ### Vulnerability Found
+* the admin page was a intresting finding
+* <img width="285" height="54" alt="image" src="https://github.com/user-attachments/assets/fb217303-b14b-4056-aec6-dd87c4019098" />
 
-* Description of the vulnerability (e.g., LFI, SQLi, file upload).
-* CVE if applicable.
-* Proof of concept or exploit steps.
+* Found a Private for username james by exploiting the cookie function and since there was ssh portt open i then used tthe key
+* <img width="374" height="55" alt="image" src="https://github.com/user-attachments/assets/fad6b92f-d999-4f2f-8014-f23a80b70ee6" />
+* <img width="618" height="430" alt="image" src="https://github.com/user-attachments/assets/cc072266-2518-4ccc-9fe7-c0a6dbbccc0b" />
 
 ### Shell Access
 
-```bash
-nc -lvnp 4444
-# or reverse shell payload used
-```
+we use the rsa key to access ssh on the page and used john to crack the password for the ssh entry
+<img width="620" height="203" alt="image" src="https://github.com/user-attachments/assets/69c4598c-0fb0-444b-b814-0c3356f439ca" />
+<img width="570" height="388" alt="image" src="https://github.com/user-attachments/assets/6012b4e0-f38b-4581-8a93-a26b25c51fd2" />
 
-**Initial Shell**: `www-data@target`
+
+
+**Initial Shell**: `/home/james`
 
 ---
 
 ## 📈 Privilege Escalation
 
-### Enumeration with LinPEAS
+## Enumertion
+by accessing the todo list on james's machine we get a automated script is running meaning we can use cronjobs to get our privlges escalete
+also,We get some interesting information from this:
 
-* Use `linpeas.sh`, `sudo -l`, or manual checks:
-
-```bash
-sudo -l
-cat /etc/passwd
+There is some kind of password in the password manager they wrote
+The encryption is weak
+There is some kind of automated build script running
+Ok, remember the source code we got from the first step? There is some interesting stuff in it:
 ```
+func main() {
+	credsPath, err := homedir.Expand("~/.overpass")
+	if err != nil {
+		fmt.Println("Error finding home path:", err.Error())
+	}
+	//Load credentials
+    passlist, status := loadCredsFromFile(credsPath)
+    ...
+```
+The credentials are stored in ~/.overpas
+<img width="591" height="37" alt="image" src="https://github.com/user-attachments/assets/71741a61-0aeb-4035-9e20-a22f8a760043" />
+There is another interesting function in the source code:
+```
+func rot47(input string) string {
+	var result []string
+	for i := range input[:len(input)] {
+		j := int(input[i])
+		if (j >= 33) && (j <= 126) {
+			result = append(result, string(rune(33+((j+14)%94))))
+		} else {
+			result = append(result, string(input[i]))
+		}
+	}
+	return strings.Join(result, "")
+}
+
+```
+<img width="946" height="537" alt="image" src="https://github.com/user-attachments/assets/38173c01-08f6-42d2-a883-f89b649d9a49" />
+<img width="847" height="284" alt="image" src="https://github.com/user-attachments/assets/59af810b-23f1-46b1-95eb-82a619bf3f88" />
+<img width="766" height="198" alt="image" src="https://github.com/user-attachments/assets/c629e621-7a5c-40bc-8353-b36141839763" />
+<img width="770" height="102" alt="image" src="https://github.com/user-attachments/assets/23bcddf1-a8bd-43f3-a231-72e156e10e1c" />
+<img width="857" height="555" alt="image" src="https://github.com/user-attachments/assets/55d81be1-bb86-439e-99f2-d170b08c93c5" />
+
 
 ### Vulnerability Found
 
-* Misconfigured sudo
-* Cron job
-* SUID binary
-* Kernel exploit
+* Authenttication bypass
 
 ---
 
-## 🔑 Flags
-
-* `user.txt`: `THM{xxxxxxxxxxxxxxxxxxxxxxxx}`
-* `root.txt`: `THM{yyyyyyyyyyyyyyyyyyyyyyyy}`
 
 ---
 
@@ -117,31 +155,5 @@ cat /etc/passwd
 
 ---
 
-## 📁 Bonus: GitHub Structure Suggestion
 
-If you’re uploading this write-up to GitHub:
 
-```
-tryhackme-writeups/
-└── <room-name>/
-    ├── README.md    # ← Write-up
-    ├── nmap.txt
-    ├── gobuster.txt
-    ├── linpeas.log
-    └── exploit.py   # If applicable
-```
-
----
-
-## 🧠 References
-
-* [TryHackMe Room](https://tryhackme.com/room/<room-name>)
-* [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
-* [GTFOBins](https://gtfobins.github.io/)
-
-```
-
----
-
-Would you like me to auto-generate this as a **Markdown file** or fill it in with data from a specific room you’ve done (e.g., *Vulnversity* or *Mr Robot*)?
-```
